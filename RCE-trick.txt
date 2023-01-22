@@ -1,0 +1,26 @@
+Project Started:
+1. Port Scanning IP Address [Found open SSH but not vulnerable + brute forcing password didn't work].
+2. Performed Reverse IP Address [Found the Domain Name].
+3. Performed Subdomain Enumeration [Found a Resolving Subdomain `vip.target.com`].
+4. Port Scanning [Found Nginx, Xampp, Java Running].
+5. Checking for common vulnerabilities and well known exploitations [None was vulnerable to CVE].
+6. Directory Brute Force [Found Login Page].
+7. Trying common usernames and Brute Forcing password input [Didn't work].
+8. Viewing Page Source + Reading JavaScript Files [Found hidden Registration Page].
+9. Registration required Whitelisted Range of Phone Numbers.
+10. After several tries, Found the phone number pattern.
+11. Verification code is sent to the phone number and it is required in order to register [Problem is that I don't have access to the phone number that I added and can't add different pattern].
+12. Intercepting requests and responses, I found a vulnerability in the Phone Number Verification Process [Verification Code is being Leaked in the Response].
+13. Confirmed the verification code and registered successfully.
+14. Navigated to Login Page (Required Username and password to Login).
+15. Unable to Login [Response Message: Username is not Valid (Knowing that I used the same username in registration)].
+16. Added the registered phone number instead of the username [Logged In Successfully].
+17. Server is running Xampp. I searched for File Upload endpoints [All picture uploads were validated and protected].
+18. After 2 hours of browsing the dashboard and checking every single functionality, I found an endpoint that is missing to validate the upload icon extension.
+19. Uploaded php reverse shell and navigated to the directory where it is stored [Shell didn't execute and PHP wasn't rendered in the page].
+20. Checked the requests and found (.do) in the request URL [Although application is running Xampp, But it is using Java in the backend].
+21. Wrote simple jsp reverse shell, Then uploaded it.
+22. I got Remote Code Execution (RCE) and accessed the server as Administrator.
+23. All done within 4 Hours.
+
+RCE is not just a bug, it is a mindset.

